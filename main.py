@@ -1,21 +1,41 @@
+from dotenv import load_dotenv
+import os
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
-# Credenciales de tu aplicación
-client_id = 'd88377feaef54b45acb0d1d8941efcf2'
-client_secret = '2e771745945c4ba4828a1dd357f40f93'
-redirect_uri = 'http://localhost:8888/callback'
+load_dotenv()
 
-# Alcance de los permisos
-scope = 'user-library-read'
+client_id = os.getenv('SPOTIPY_CLIENT_ID')
+client_secret = os.getenv('SPOTIPY_CLIENT_SECRET')
+redirect_uri = os.getenv('SPOTIPY_REDIRECT_URI')
 
-# Autenticación y obtención del token
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
                                                client_secret=client_secret,
                                                redirect_uri=redirect_uri,
-                                               scope=scope))
+                                               scope='user-library-read'))
+
+
+# Credenciales de tu aplicación
+#client_id = 'd88377feaef54b45acb0d1d8941efcf2'
+#client_secret = '2e771745945c4ba4828a1dd357f40f93'
+#redirect_uri = 'http://localhost:8888/callback'
+
+# Alcance de los permisos
+#scope = 'user-library-read'
+
+# Autenticación y obtención del token
+#sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
+#                                               client_secret=client_secret,
+#                                               redirect_uri=redirect_uri,
+#                                               scope=scope))
 
 results = sp.search(q='album:Abbey Road artist:The Beatles', type='album')
+albums = results['albums']['items']
+
+for album in albums:
+    print(album['name'],album['release_date'])
+
+results = sp.search(q='album:A Night at the Opera artist:Queen', type='album')
 albums = results['albums']['items']
 
 for album in albums:
